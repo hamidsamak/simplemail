@@ -75,7 +75,7 @@ class SimpleMail {
 			$host = 'ssl://' . $host;
 
 		$socket = fsockopen($host, $this->port, $errno, $errstr);
-		stream_set_timeout($socket, 10);
+
 		if ($socket === false) {
 			$this->error = $errno . ' ' . $errstr;
 
