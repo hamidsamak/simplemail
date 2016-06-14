@@ -84,12 +84,21 @@ class SimpleMail {
 			return false;
 
 		$commands = array(
-			'EHLO ' . $this->host => 250,
+			'EHLO ' . $this->host => 250
+		);
+
+		if ($this->secure == 'tls')
+			$commands = array_merge($commands, array(
+				'STARTTLS' => 220,
+				'EHLO  ' . $this->host => 250
+			));
+
+		$commands = array_merge($commands, array(
 			'AUTH LOGIN' => 334,
 			base64_encode($this->user) => 334,
 			base64_encode($this->pass) => 235,
 			'MAIL FROM: ' . strstr($this->from, '<') => 250,
-		);
+		));
 
 		foreach ($this->to as $to)
 			$commands['RCPT TO: ' . strstr($to, '<')] = 250;
@@ -109,9 +118,14 @@ class SimpleMail {
 		foreach ($commands as $command => $code) {
 			fwrite($socket, $command . "\r\n");
 
-
 			if ($code > -1 && $this->parse_result($socket, $code) === false) {
 				$this->error .= ' (' . $command . ')';
+
+				return false;
+			}
+
+			if ($command == 'STARTTLS' && stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT) === false) {
+				$this->error .= 'Unable to start TLS encryption. (' . $command . ')';
 
 				return false;
 			}
