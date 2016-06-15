@@ -16,7 +16,7 @@ class SimpleMail {
 	// smtp password
 	public $pass;
 	// security mode (ssl or tls)
-	public $secure;
+	public $security;
 
 	// mail subject
 	public $subject;
@@ -71,7 +71,7 @@ class SimpleMail {
 	public function send() {
 		$host = $this->host;
 
-		if ($this->secure == 'ssl')
+		if ($this->security == 'ssl')
 			$host = 'ssl://' . $host;
 
 		$socket = fsockopen($host, $this->port, $errno, $errstr);
@@ -87,7 +87,7 @@ class SimpleMail {
 			'EHLO ' . $this->host => 250
 		);
 
-		if ($this->secure == 'tls')
+		if ($this->security == 'tls')
 			$commands = array_merge($commands, array(
 				'STARTTLS' => 220,
 				'EHLO  ' . $this->host => 250

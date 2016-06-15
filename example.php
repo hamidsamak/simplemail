@@ -8,7 +8,7 @@ $mail->host = 'smtp.gmail.com';
 $mail->user = 'username@gmail.com';
 $mail->pass = 'password';
 $mail->port = 465;
-$mail->secure = 'ssl';
+$mail->security = 'ssl';
 
 $mail->subject = 'Hello';
 $mail->message = 'This is a test message.';
