@@ -2,23 +2,17 @@
 
 require 'classSimpleMail.php';
 
-$mail = new SimpleMail();
+$mail = new SimpleMail('smtp.gmail.com', 587, 'tls');
+$mail->auth('gmaccount@gmail.com', 'password');
 
-$mail->host = 'smtp.gmail.com';
-$mail->user = 'username@gmail.com';
-$mail->pass = 'password';
-$mail->port = 465;
-$mail->security = 'ssl';
+$mail->from('burt.johnson@hotmail.com', 'Burt Johnson');
+$mail->to('john.smith@yahoo.com', 'John Smith');
 
-$mail->subject = 'Hello';
-$mail->message = 'This is a test message.';
-
-$mail->from('username@gmail.com', 'Sender name');
-$mail->to('recipient@domain.com', 'Receiver name');
+$mail->subject = 'Hello, partner';
+$mail->message = '<h3>My Message</h3>
+                  <b>This</b> is a html test message.';
 
 if ($mail->send())
 	echo 'Mail sent successfully.';
 else
 	echo 'Error: ' . $mail->error;
-
-?>
