@@ -2,28 +2,39 @@
 
 /**
  * PHP Simple Mail (SMTP)
- * @author Hamid Samak <hamid@limny.org>
- * @copyright 2016 Hamid Samak
- * @license MIT License
+ * @Original author Hamid Samak <hamid@limny.org>
+ * @Original code at https://github.com/hamidsamak/simplemail
+ * @Additional work by halojoy https://github.com/halojoy
+ * @Code at https://github.com/halojoy/SimpleMail
+ * @Copyright 2016 Hamid Samak
+ * @License MIT License
  */
+
 class SimpleMail {
+
 	// smtp host
 	public $host;
 	// smtp port
 	public $port;
+	// security mode (ssl or tls)
+	public $security;
+
 	// smtp username
 	public $user;
 	// smtp password
 	public $pass;
-	// security mode (ssl or tls)
-	public $security;
+
+	// mail from
+	public $from;
+	// to recipient
+	public $to = array();
 
 	// mail subject
 	public $subject;
 	// message content
 	public $message;
 
-	// mail content type
+	// mail content type (text/html or text/plain)
 	public $type = 'text/html';
 	// mail encoding
 	public $encoding = 'UTF-8';
@@ -33,15 +44,25 @@ class SimpleMail {
 	// print results
 	public $debug = false;
 
-	// mail from
-	private $from;
-	// recipient(s)
-	private $to = array();
+/////////////////////////////////////////////////////////////////
+
+    public function __construct($host, $port, $security = 'ssl')
+    {
+        $this->host = $host;
+        $this->port = $port;
+        $this->security = $security;
+    }
+
+    public function auth($user, $pass)
+    {
+        $this->user = $user;
+        $this->pass = $pass;
+    }
 
 	/**
 	 * set sender
 	 * @param  string $address email address
-	 * @param  string $name    sender name
+	 * @param  string $name sender name
 	 * @return void
 	 */
 	public function from($address, $name = null) {
@@ -52,9 +73,9 @@ class SimpleMail {
 	}
 
 	/**
-	 * set recipients
+	 * set recipient(s)
 	 * @param  string $address email address
-	 * @param  string $name    sender name
+	 * @param  string $name recipient name
 	 * @return void
 	 */
 	public function to($address, $name = null) {
@@ -108,6 +129,7 @@ class SimpleMail {
 			'Subject: ' . $this->subject . "\r\n" .
 				'To: ' . implode(', ', $this->to) . "\r\n" .
 				'From: ' . $this->from . "\r\n" .
+                'Reply-To: ' . $this->from . "\r\n" .
 				'Content-Type: ' . $this->type . "\r\n" .
 				'Content-Encoding: ' . $this->encoding . "\r\n\r\n" .
 				$this->message => -1,
