@@ -1,6 +1,6 @@
 <?php
 
-require_once 'simplemail.class.php';
+require_once 'classSimpleMail.php';
 
 $mail = new SimpleMail();
 
