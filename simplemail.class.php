@@ -42,7 +42,7 @@ class SimpleMail
 	// mail from
 	private $from;
 	// recipient(s)
-	private $to = array();
+	private $to = [];
 
 	/**
 	 * set sender
@@ -103,29 +103,29 @@ class SimpleMail
 			return false;
 		}
 
-		$commands = array(
+		$commands = [
 			'EHLO ' . $this->host => 250,
-		);
+		];
 
 		if ($this->security == 'tls') {
-			$commands = array_merge($commands, array(
+			$commands = array_merge($commands, [
 				'STARTTLS' => 220,
 				'EHLO  ' . $this->host => 250,
-			));
+			]);
 		}
 
-		$commands = array_merge($commands, array(
+		$commands = array_merge($commands, [
 			'AUTH LOGIN' => 334,
 			base64_encode($this->user) => 334,
 			base64_encode($this->pass) => 235,
 			'MAIL FROM: ' . strstr($this->from, '<') => 250,
-		));
+		]);
 
 		foreach ($this->to as $to) {
 			$commands['RCPT TO: ' . strstr($to, '<')] = 250;
 		}
 
-		$commands = array_merge($commands, array(
+		$commands = array_merge($commands, [
 			'DATA' => 354,
 			'Subject: =?UTF-8?B?' . base64_encode($this->subject) . "?=\r\n" .
 				'To: ' . implode(', ', $this->to) . "\r\n" .
@@ -135,7 +135,7 @@ class SimpleMail
 				$this->message => -1,
 			'.' => 250,
 			'QUIT' => 0,
-		));
+		]);
 
 		foreach ($commands as $command => $code) {
 			fwrite($socket, $command . "\r\n");
